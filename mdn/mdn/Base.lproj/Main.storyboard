@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--before-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" userLabel="before" customClass="ViewController" customModule="mdn" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="before" translatesAutoresizingMaskIntoConstraints="NO" id="iZs-fM-N3J">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sCa-9w-yz4">
+                                <rect key="frame" x="0.0" y="665" width="414" height="71"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="71" id="pA9-Rb-15E"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="beginCountdown:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DRf-Ao-qUo"/>
+                                </connections>
+                            </button>
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="countdown" translatesAutoresizingMaskIntoConstraints="NO" id="lmj-VD-psF">
+                                <rect key="frame" x="0.0" y="626" width="414" height="110"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="110" id="mex-4B-Wbb"/>
+                                </constraints>
+                            </imageView>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1:59" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mPk-bM-rMQ">
+                                <rect key="frame" x="264" y="662" width="50" height="37"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="069-9n-8ND"/>
+                                    <constraint firstAttribute="height" constant="37" id="isy-SC-HYJ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="PingFangTC-Semibold" family="PingFang TC" pointSize="24"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="lmj-VD-psF" firstAttribute="trailing" secondItem="iZs-fM-N3J" secondAttribute="trailing" id="56y-ub-OPs"/>
+                            <constraint firstItem="iZs-fM-N3J" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="6VY-m7-nNq"/>
+                            <constraint firstItem="iZs-fM-N3J" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="BMB-cr-j4K"/>
+                            <constraint firstItem="sCa-9w-yz4" firstAttribute="bottom" secondItem="iZs-fM-N3J" secondAttribute="bottom" id="BaK-gd-7KW"/>
+                            <constraint firstItem="sCa-9w-yz4" firstAttribute="leading" secondItem="iZs-fM-N3J" secondAttribute="leading" id="BpJ-CO-orW"/>
+                            <constraint firstItem="lmj-VD-psF" firstAttribute="leading" secondItem="iZs-fM-N3J" secondAttribute="leading" id="CHa-Wk-dNr"/>
+                            <constraint firstAttribute="trailing" secondItem="mPk-bM-rMQ" secondAttribute="trailing" constant="100" id="TDB-va-DMT"/>
+                            <constraint firstItem="iZs-fM-N3J" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="TYz-yW-iH9"/>
+                            <constraint firstItem="lmj-VD-psF" firstAttribute="bottom" secondItem="iZs-fM-N3J" secondAttribute="bottom" id="ZuI-4c-lN7"/>
+                            <constraint firstItem="sCa-9w-yz4" firstAttribute="trailing" secondItem="iZs-fM-N3J" secondAttribute="trailing" id="eK5-tQ-3xQ"/>
+                            <constraint firstAttribute="bottom" secondItem="mPk-bM-rMQ" secondAttribute="bottom" constant="37" id="tOT-Mb-Ute"/>
+                            <constraint firstItem="iZs-fM-N3J" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="zNA-9V-izQ"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="imageCountdown" destination="lmj-VD-psF" id="UQX-ah-gap"/>
+                        <outlet property="labelCountdown" destination="mPk-bM-rMQ" id="nGf-eP-J7x"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-207.24637681159422" y="-64.402173913043484"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="before" width="375" height="667"/>
+        <image name="countdown" width="375" height="99.666664123535156"/>
+    </resources>
+</document>
