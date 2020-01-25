@@ -43,7 +43,7 @@ public class DemoServiceImplTest {
 
 	@Test
 	public void test() {
-		DemoEntity alex = employeeService.getEmployeeByName("bob");
-		Assertions.assertThat(alex.getName()).isEqualTo("bob");
+		DemoEntity alex = employeeService.getEmployeeByName("alex");
+		Assertions.assertThat(alex.getName()).isEqualTo("alex");
 	}
 }
