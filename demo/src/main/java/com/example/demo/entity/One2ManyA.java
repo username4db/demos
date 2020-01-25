@@ -20,9 +20,9 @@ public class One2ManyA {
 
 	@Column(length = 20)
 	private String name;
-	
+
 	@OneToMany
-	private List<One2ManyB> bs;
+	private List<One2ManyB> b;
 
 	public Long getId() {
 		return id;
@@ -40,12 +40,12 @@ public class One2ManyA {
 		this.name = name;
 	}
 
-	public List<One2ManyB> getBs() {
-		return bs;
+	public List<One2ManyB> getB() {
+		return b;
 	}
 
-	public void setBs(List<One2ManyB> bs) {
-		this.bs = bs;
+	public void setB(List<One2ManyB> b) {
+		this.b = b;
 	}
 
 }

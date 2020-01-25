@@ -1,8 +1,6 @@
 package com.example.demo.service;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -35,13 +33,13 @@ public class DemoServiceImplTest {
 	@MockBean
 	private DemoRepository employeeRepository;
 
-	@Before
+	// @Before
 	public void before() {
 		DemoEntity alex = new DemoEntity("alex");
 		Mockito.when(employeeRepository.findByName(alex.getName())).thenReturn(alex);
 	}
 
-	@Test
+	// @Test
 	public void test() {
 		DemoEntity alex = employeeService.getEmployeeByName("alex");
 		Assertions.assertThat(alex.getName()).isEqualTo("alex");

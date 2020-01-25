@@ -1,6 +1,5 @@
 package com.example.demo.repository;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -28,28 +27,35 @@ public class One2OneRepositoryTest {
 	@Autowired
 	private One2OneBRepository repB;
 
-	@Before
+	@Test
 	@Rollback(false)
-	public void before() {
-		LOG.error("before");
+	public void insert() {
+		LOG.error("===================================================================================");
 		One2OneA a = new One2OneA();
 		a.setName("A");
 		One2OneB b = new One2OneB();
 		b.setName("B");
-		a.setOne2(b);
-
-		// repB.save(b);
+		a.setB(b);
 		repA.save(a);
-		
-		One2OneB b2 = new One2OneB();
-		repB.save(b2);
+
+		One2OneA a1 = new One2OneA();
+		a1.setName("A1");
+		One2OneB b1 = new One2OneB();
+		b1.setName("B1");
+		b1.setA(a1);
+		a1.setB(b1);
+		repB.save(b1);
+		LOG.error("===================================================================================");
+
 	}
 
 	@Test
 	@Rollback(false)
 	public void test() {
-		LOG.error("test");
+		LOG.error("===================================================================================");
 		One2OneA found = repA.findByName("A");
-		LOG.error(found.getOne2().getName());
+		LOG.error(found == null ? "NULL" : "NOT NULL");
+		LOG.error("===================================================================================");
 	}
+
 }

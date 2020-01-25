@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
@@ -22,7 +23,8 @@ public class One2OneA {
 	private String name;
 
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
-	private One2OneB one2;
+	@JoinColumn(name = "b_id")
+	private One2OneB b;
 
 	public Long getId() {
 		return id;
@@ -40,11 +42,11 @@ public class One2OneA {
 		this.name = name;
 	}
 
-	public One2OneB getOne2() {
-		return one2;
+	public One2OneB getB() {
+		return b;
 	}
 
-	public void setOne2(One2OneB one2) {
-		this.one2 = one2;
+	public void setB(One2OneB b) {
+		this.b = b;
 	}
 }

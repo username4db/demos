@@ -1,10 +1,13 @@
 package com.example.demo.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
@@ -12,14 +15,15 @@ import javax.persistence.SequenceGenerator;
 public class Many2OneA {
 
 	@Id
-	@SequenceGenerator(name = "SEQ_GEN", sequenceName = "SEQ_M2O_A", initialValue = 1, allocationSize = 1)
+	@SequenceGenerator(name = "SEQ_GEN", sequenceName = "SEQ_M2O_A", initialValue = 100, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_GEN")
 	private Long id;
 
 	@Column(length = 20)
 	private String name;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "B_ID")
 	private Many2OneB b;
 
 	public Long getId() {

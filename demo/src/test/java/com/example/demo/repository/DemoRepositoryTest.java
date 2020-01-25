@@ -1,6 +1,5 @@
 package com.example.demo.repository;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ public class DemoRepositoryTest {
 	@Autowired
 	private DemoRepository demoRepository;
 
-	@Test
+	// @Test
 	@Rollback(true)
 	public void whenFindByName_thenReturnEmployee() {
 		// given
