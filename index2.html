@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div id="id-vue-app">
+      <comp-cif-table
+        v-bind:cifs="cifs"
+        v-on:add-cif="addCIF"
+        v-on:remove-cif="removeCIF"
+        v-on:add-loan="addLoan"
+        v-on:remove-loan="removeLoan"
+      >
+      </comp-cif-table>
+    </div>
+
+    <script type="text/x-template" id="id-cif-table">
+      <table class="cif-table">
+      	<thead>
+      		<tr>
+      			<th>額度所屬國</th>
+      			<th>CIF no.</th>
+      			<th>客戶名稱</th>
+      			<th>GIN</th>
+      			<th>引入同一歸戶</th>
+      			<th>關連額度</th>
+      		</tr>
+      	</thead>
+      	<tbody v-for="cif in cifs">
+      		<tr>
+      			<td>{{ cif.country.new }}</td>
+      			<td>{{ cif.cifno.new }}</td>
+      			<td>{{ cif.cname.new }}</td>
+      			<td>{{ cif.gin.new }}</td>
+      			<td><button v-on:click="importGIN(cif.country.new,cif.cifno.new,cif.gin.new)">引入</button></td>
+      			<th rowspan="2"><button v-on:click="removeCIF(cif)">x</button></th>
+      		</tr>
+      		<tr>
+      			<td colspan="5">
+      				<comp-loan-table v-bind:cif="cif" v-on:add-loan="addLoan" v-on:remove-loan="removeLoan">
+      				</comp-loan-table>
+      			</td>
+      		</tr>
+      	</tbody>
+      	<tfoot>
+      		<tr>
+      			<td>
+              <select v-model:value="newCifCountry">
+                <option value="">select</option>
+                <option value="TW">TW</option>
+                <option value="VN">VN</option>
+              </select>
+            </td>
+      			<td>
+              <input type="text" placeholder="CIF no" v-model:value="newCifNo" v-on:blur="getGIN" v-on:focus="resetGIN">
+            </td>
+      			<td>{{newCName}}</td>
+      			<td>{{newGin}}</td>
+      			<td></td>
+            <th><button v-on:click="addCIF">+</button></th>
+      		</tr>
+      	</tfoot>
+      </table>
+    </script>
+
+    <script type="text/x-template" id="id-loan-table">
+      <table class="loan-table">
+      	<thead>
+      		<tr>
+      			<th>系統別</th>
+      			<th>幣別</th>
+      			<th>額度編號</th>
+      			<th>LINE CODE</th>
+      			<th>額度到期日</th>
+            <th style="width: 20px;"></th>
+      		</tr>
+      	</thead>
+      	<tbody v-for="loan in cif.loans">
+      		<tr>
+      			<td>{{loan.system.new}}</td>
+      			<td>{{loan.currency.new}}</td>
+      			<td>{{loan.loanno.new}}</td>
+      			<td>{{loan.linecode.new}}</td>
+      			<td>{{loan.duedate.new}}</td>
+      			<th rowspan="2"><button v-on:click="removeLoan(loan)">x</button></th>
+      		</tr>
+      	</tbody>
+      	<tfoot>
+      		<tr>
+      			<!--td colspan="5">
+              <select name="" id="">
+                <option value="">Select one to add</option>
+                <option value="">bancs TWD FACM001</option>
+                <option value="">bancs TWD FACM001 LINECODE1</option>
+                <option value="">bancs TWD FACM002</option>
+              </select>
+            </td-->
+            <td>
+              <select v-model="selectedSystem">
+                <option v-for="loans_system in loans_systems">{{loans_system}}</option>
+              </select>
+            </td>
+            <td>
+              <select v-model="selectedCurrency">
+                <option v-for="loans_currency in loans_currencies">{{loans_currency}}</option>
+              </select>
+            </td>
+            <td>
+              <select v-model="selectedLoanno"></select>
+            </td>
+            <td>
+              <select v-model="selectedLinecode"></select>
+            </td>
+            <td> {{selectDuedate}}{{test}}</td>
+            <th><button v-on:click="addLoan">+</button></th>
+      		</tr>
+      	</tfoot>
+      </table>
+    </script>
+
+    <script>
+      var _newCif = function (country, cifno, cname, gin) {
+        return {
+          country: {
+            old: "",
+            new: country,
+          },
+          cifno: {
+            old: "",
+            new: cifno,
+          },
+          cname: {
+            old: "",
+            new: cname,
+          },
+          gin: {
+            old: "",
+            new: gin,
+          },
+          loans: [],
+        };
+      };
+      var _newLoan = function (system, currency, loanno, linecode, duedate) {
+        return {
+          system: {
+            old: "",
+            new: system,
+          },
+          currency: {
+            old: "",
+            new: currency,
+          },
+          loanno: {
+            old: "",
+            new: loanno,
+          },
+          linecode: {
+            old: "",
+            new: linecode,
+          },
+          duedate: {
+            old: "",
+            new: duedate,
+          },
+        };
+      };
+      Vue.component("comp-cif-table", {
+        props: ["cifs"],
+        template: "#id-cif-table",
+        data: function () {
+          return {
+            newCifCountry: "",
+            newCifNo: "",
+            newCName: "press query",
+            newGin: "",
+            d_cifs: this.cifs,
+            realtimeLoans: [
+              {
+                system: "bancs",
+                currency: "TWD",
+                limitseq: "FACM001",
+                linecode: "6000",
+              },
+              {
+                system: "bancs",
+                currency: "TWD",
+                limitseq: "FACM001",
+                linecode: "6005",
+              },
+            ],
+          };
+        },
+        computed: {},
+        methods: {
+          getGIN: function () {
+            alert("取得 " + this.newCifCountry + " + " + this.newCifNo + " 的 name 與 real gin code");
+            this.newCName = "C NAME";
+            this.newGin = "GIN CODE";
+          },
+          resetGIN: function () {
+            this.newCName = "";
+            this.newGin = "";
+          },
+          addCIF: function () {
+            this.$emit("add-cif", new _newCif(this.newCifCountry, this.newCifNo, this.newCName, this.newGin));
+            this.newCifCountry = "";
+            this.newCifNo = "";
+            this.newCName = "press query";
+            this.newGin = "";
+          },
+          removeCIF: function (cif) {
+            this.$emit("remove-cif", cif);
+          },
+          addLoan: function (cif, loan) {
+            this.$emit("add-loan", cif, loan);
+          },
+          removeLoan: function (cif, loan) {
+            this.$emit("remove-loan", cif, loan);
+          },
+          importGIN: function (country, cifno, gincode) {
+            alert("取得 " + gincode + " 其餘 COUNTRY + CIFNO 後加入");
+          },
+          genRelation: function () {
+            alert("no");
+          },
+        },
+      });
+      Vue.component("comp-loan-table", {
+        props: ["cif"],
+        template: "#id-loan-table",
+        data: function () {
+          return {
+            loans: [
+              {
+                system: "bancs",
+                currency: "TWD",
+                loanno: "FAMC0001",
+                linecode: "",
+                duedate: "2020-01-01",
+              },
+              {
+                system: "bancs",
+                currency: "TWD",
+                loanno: "FAMC0001",
+                linecode: "LINECODE1",
+                duedate: "2020-01-01",
+              },
+              {
+                system: "bancs",
+                currency: "JPY",
+                loanno: "FAMC0002",
+                linecode: "",
+                duedate: "2020-01-01",
+              },
+              {
+                system: "ifx",
+                currency: "USD",
+                loanno: "FAMC0001",
+                linecode: "",
+                duedate: "2020-01-01",
+              },
+            ],
+            selectedSystem: "",
+            selectedCurrency: "",
+            selectedLoanno: "",
+            selectedLinecode: "",
+            selectDuedate: "",
+          };
+        },
+        watch: {
+          selectedSystem: {
+            immediate: true,
+            handler(newValue, oldValue) {
+              console.log(newValue);
+              console.log(oldValue);
+            },
+          },
+        },
+        computed: {
+          loans_systems: function () {
+            var a1 = $.map(this.loans, function (v, i) {
+              return v.system;
+            });
+            var a2 = $.unique(a1);
+            return a2;
+          },
+          test: function () {
+            return this.selectedSystem;
+          },
+          loans_currencies: function () {
+            var a1 = $.grep(this.loans, function (v, i) {
+              this.selectedSystem == v.system;
+            });
+            console.log(a1);
+            var a2 = $.map(a1, function (v, i) {
+              return v.currency;
+            });
+            console.log(a2);
+            var a3 = $.unique(a2);
+            console.log(a3);
+            return a3;
+          },
+          loans_loannos: function () {
+            return [];
+          },
+          loans_linecodes: function () {
+            return [];
+          },
+        },
+        methods: {
+          addLoan: function () {
+            this.$emit("add-loan", this.cif, new _newLoan("", "", "", "", ""));
+          },
+          removeLoan: function (loan) {
+            this.$emit("remove-loan", this.cif, loan);
+          },
+          getLoans: function () {
+            this.cif.existingLoans.filter;
+          },
+        },
+        watch: {
+          selectedLoanSystem: function () {},
+        },
+      });
+      var app = new Vue({
+        el: "#id-vue-app",
+        data: {
+          cifs: [],
+        },
+        beforeCreate: function () {},
+        created: function () {},
+        beforeMount: function () {},
+        mounted: function () {},
+        beforeUpdate: function () {},
+        updated: function () {
+          for (var i = 0; i < this.cifs.length; i++) {
+            this.cifs[i].cifseq = i;
+            for (var j = 0; j < this.cifs[i].loans.length; j++) {
+              this.cifs[i].loans[j].loanseq = j;
+            }
+          }
+        },
+        methods: {
+          addCIF: function (cif) {
+            this.cifs.push(cif);
+            this.reorder();
+          },
+          removeCIF: function (cif) {
+            this.cifs = this.cifs.filter(function (v, i, a) {
+              return cif.cifseq !== v.cifseq;
+            });
+            this.reorder();
+          },
+          addLoan: function (cif, loan) {
+            cif.loans.push(loan);
+            this.reorder();
+          },
+          removeLoan: function (cif, loan) {
+            cif.loans = cif.loans.filter(function (v, i, a) {
+              return loan.loanseq !== v.loanseq;
+            });
+            this.reorder();
+          },
+          reorder: function () {
+            $.each(this.cifs, function (i, v) {
+              v.cifseq = i;
+              $.each(v.loans, function (j, w) {
+                w.loanseq = j;
+              });
+            });
+          },
+        },
+      });
+      app.cifs = [
+        {
+          deleted: false,
+          country: {
+            old: "TW",
+            new: "TW",
+          },
+          cifno: {
+            old: "11111111",
+            new: "09423336",
+          },
+          cname: {
+            old: "11111111",
+            new: "時時電腦股份有限",
+          },
+          gin: {
+            old: "11111111",
+            new: "0010123",
+          },
+          loans: [
+            {
+              system: {
+                old: "bancs",
+                new: "bancs",
+              },
+              currency: {
+                old: "TWD",
+                new: "TWD",
+              },
+              loanno: {
+                old: "FACM001",
+                new: "FACM001",
+              },
+              linecode: {
+                old: "",
+                new: "",
+              },
+              duedate: {
+                old: "2020-10-17",
+                new: "2020-10-17",
+              },
+            },
+            {
+              system: {
+                old: "bancs",
+                new: "bancs",
+              },
+              currency: {
+                old: "TWD",
+                new: "TWD",
+              },
+              loanno: {
+                old: "FACM001",
+                new: "FACM001",
+              },
+              linecode: {
+                old: "",
+                new: "",
+              },
+              duedate: {
+                old: "2020-10-17",
+                new: "2020-10-17",
+              },
+            },
+          ],
+          existingLoans: [
+            {
+              system: "bancs",
+              currency: "TWD",
+              loanno: "FACM001",
+              linecode: "",
+              duedate: "2020-10-17",
+            },
+            {
+              system: "bancs",
+              currency: "TWD",
+              loanno: "FACM001",
+              linecode: "6005",
+              duedate: "2020-10-17",
+            },
+            {
+              system: "bancs",
+              currency: "TWD",
+              loanno: "FACM001",
+              linecode: "6005",
+              duedate: "2020-10-17",
+            },
+          ],
+        },
+        {
+          deleted: false,
+          country: {
+            old: "SG",
+            new: "SG",
+          },
+          cifno: {
+            old: "22222222",
+            new: "617668FN",
+          },
+          cname: {
+            old: "11111111",
+            new: "TIME COMPUTER CO",
+          },
+          gin: {
+            old: "11111111",
+            new: "0010123",
+          },
+          loans: [
+            {
+              system: {
+                old: "bancs",
+                new: "bancs",
+              },
+              currency: {
+                old: "TWD",
+                new: "TWD",
+              },
+              loanno: {
+                old: "FACM001",
+                new: "FACM001",
+              },
+              linecode: {
+                old: "",
+                new: "",
+              },
+              duedate: {
+                old: "2020-10-17",
+                new: "2020-10-17",
+              },
+            },
+            {
+              system: {
+                old: "bancs",
+                new: "bancs",
+              },
+              currency: {
+                old: "TWD",
+                new: "TWD",
+              },
+              loanno: {
+                old: "FACM001",
+                new: "FACM001",
+              },
+              linecode: {
+                old: "",
+                new: "",
+              },
+              duedate: {
+                old: "2020-10-17",
+                new: "2020-10-17",
+              },
+            },
+          ],
+        },
+        {
+          deleted: false,
+          country: {
+            old: "VN",
+            new: "TW",
+          },
+          cifno: {
+            old: "33333333",
+            new: "04231812",
+          },
+          cname: {
+            old: "11111111",
+            new: "微軟資訊有限公司",
+          },
+          gin: {
+            old: "11111111",
+            new: "0010964",
+          },
+          loans: [
+            {
+              system: {
+                old: "bancs",
+                new: "bancs",
+              },
+              currency: {
+                old: "TWD",
+                new: "TWD",
+              },
+              loanno: {
+                old: "FACM001",
+                new: "FACM001",
+              },
+              linecode: {
+                old: "",
+                new: "",
+              },
+              duedate: {
+                old: "2020-10-17",
+                new: "2020-10-17",
+              },
+            },
+            {
+              system: {
+                old: "bancs",
+                new: "bancs",
+              },
+              currency: {
+                old: "TWD",
+                new: "TWD",
+              },
+              loanno: {
+                old: "FACM001",
+                new: "FACM001",
+              },
+              linecode: {
+                old: "",
+                new: "",
+              },
+              duedate: {
+                old: "2020-10-17",
+                new: "2020-10-17",
+              },
+            },
+          ],
+        },
+      ];
+    </script>
+  </body>
+</html>
