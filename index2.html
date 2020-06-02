@@ -277,7 +277,7 @@
         watch: {
           selectedSystem: {
             immediate: true,
-            handler(newValue, oldValue) {
+            handler:function(newValue, oldValue) {
               console.log(newValue);
               console.log(oldValue);
             },
@@ -295,8 +295,9 @@
             return this.selectedSystem;
           },
           loans_currencies: function () {
+            var x=this.selectedSystem; 
             var a1 = $.grep(this.loans, function (v, i) {
-              this.selectedSystem == v.system;
+              return v.system===x;
             });
             console.log(a1);
             var a2 = $.map(a1, function (v, i) {
