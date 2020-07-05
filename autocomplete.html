@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Document</title>
+		<script type="module" src="./jscript.js"></script>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+		<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	</head>
+
+	<body>
+
+		<input id="dd">
+
+
+		<script>
+			var oldTags = ['@gmail.com', '@yahoo.com', '@hotmail.com'];
+			var newTags = [];
+
+			$('#dd').keyup(function (e) {
+				// e.preventDefault();
+				// var code = (e.keyCode || e.which);
+				// if (code == 37 || code == 38 || code == 39 || code == 40) {
+				// 	return;
+				// }
+
+				if (typeof e.target.value === 'string') {
+					var prefix = e.target.value.split('@')[0];
+					$.each(oldTags, function (ind, val) {
+						newTags[ind] = prefix + val;
+					});
+					$(e.target).autocomplete({
+						source: newTags
+					}, {
+						autoFocus: true,
+						delay: 100
+					});
+				}
+			});
+
+
+
+			/*
+			var updateDatalist = function (_datalist, _textVal) {
+				var appendixs = ["@gmail.com", "@hotmail.com", "@yahoo.com"];
+				var textVal = _textVal;
+				var datalist = $(_datalist);
+				if (typeof textVal === 'string') {
+					var arrVal = textVal.split('@');
+					textVal = arrVal[0];
+				}
+				datalist.children().remove();
+				$.each(appendixs, function (ind, val) {
+					datalist.append($('<option>').val(textVal + val).text(textVal + val));
+				})
+			}
+
+			$('#dd').keyup(function (e) {
+				//e.preventDefault();
+				var code = (e.keyCode || e.which);
+				if (code == 37 || code == 38 || code == 39 || code == 40) {
+					return;
+				}
+				updateDatalist(e.target.list, e.target.value);
+			});
+			*/
+		</script>
+
+		<!--
+		<input type="text" name="dd" list="maillist" id="dd">
+
+		<datalist id="maillist">
+		</datalist>
+				<input type="text" name="dd" list="mydatalist">
+				<datalist id=mydatalist>
+					<option value="1">CAD</option>
+					<option value="2">3D</option>
+					<option value="3">MAX</option>
+				</datalist>
+
+		<select>
+			<optgroup label="Group 1">
+				<option>Option 1.1</option>
+			</optgroup>
+			<optgroup label="Group 2">
+				<option>Option 2.1</option>
+				<option>Option 2.2</option>
+			</optgroup>
+			<optgroup label="Group 3" disabled>
+				<option>Option 3.1</option>
+				<option>Option 3.2</option>
+				<option>Option 3.3</option>
+			</optgroup>
+		</select>
+		-->
+
+	</body>
+
+</html>
