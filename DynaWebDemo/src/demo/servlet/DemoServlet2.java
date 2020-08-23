@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import javax.batch.operations.JobOperator;
 import javax.batch.runtime.BatchRuntime;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,14 +14,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.logging.Logger;
 
+import demo.pojo.DemoPojo1;
+
 /**
  * Servlet implementation class DemoServlet2
  */
 @WebServlet("/demo2")
-public class DemoServlet2 extends HttpServlet {
+public class DemoServlet2 extends BaseServlet {
 	private static final long serialVersionUID = 1L;
 
 	private final Logger LOG = Logger.getLogger(this.getClass());
+
+	@Inject
+	private DemoPojo1 demoPojo;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -36,10 +42,12 @@ public class DemoServlet2 extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		starting();
 		response.setContentType("text/plain");
 		submitJobFromXML("DemoJob");
 		System.getProperties().list(response.getWriter());
 		response.getWriter().append("<HR>").append("Served at: ").append(request.getContextPath());
+		ending();
 	}
 
 	/**

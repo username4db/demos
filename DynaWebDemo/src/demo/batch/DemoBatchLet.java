@@ -15,14 +15,14 @@ public class DemoBatchLet extends AbstractBatchlet {
 	private final Logger LOG = Logger.getLogger(this.getClass());
 
 	@Inject
-	DemoPojo pojo;
+	private DemoPojo demoPojo1;
 
 	@Override
 	public String process() throws Exception {
 		LOG.info("demoBatchLet start");
-		LOG.info(pojo.getData());
+		LOG.info(demoPojo1.getData());
+		LOG.info(demoPojo1);
 		Thread.sleep(3000);
-		pojo.setData("new");
 		LOG.info("demoBatchLet ending");
 		return BatchStatus.COMPLETED.toString();
 	}

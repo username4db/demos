@@ -14,7 +14,7 @@ import org.jboss.logging.Logger;
  * Servlet implementation class DemoServlet1
  */
 @WebServlet("/demo1")
-public class DemoServlet1 extends HttpServlet {
+public class DemoServlet1 extends BaseServlet {
 	private static final long serialVersionUID = 1L;
 
 	private final Logger LOG = Logger.getLogger(this.getClass());
@@ -33,6 +33,8 @@ public class DemoServlet1 extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		starting();
+
 		response.setContentType("text/html");
 		// request.login("USER", "PASS");
 		if (request.authenticate(response)) {
@@ -44,6 +46,7 @@ public class DemoServlet1 extends HttpServlet {
 			} catch (Exception e) {
 			}
 		});
+		ending();
 
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
