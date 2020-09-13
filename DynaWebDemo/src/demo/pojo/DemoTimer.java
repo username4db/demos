@@ -12,6 +12,16 @@ public class DemoTimer implements Serializable {
 
 	private LocalDateTime reqTime;
 
+	private String[] localeNames = { "A", "B", "C" };
+
+	private String selectedLocaleString;
+
+	private String selectedLocale;
+
+	private String locale;
+
+	private String date;
+
 	public LocalDateTime getReqTime() {
 		return reqTime;
 	}
@@ -22,5 +32,45 @@ public class DemoTimer implements Serializable {
 
 	public LocalDateTime getElapsedTime() {
 		return reqTime;
+	}
+
+	public String[] getLocaleNames() {
+		return localeNames;
+	}
+
+	public void setLocaleNames(String[] localeNames) {
+		this.localeNames = localeNames;
+	}
+
+	public String getSelectedLocaleString() {
+		return selectedLocaleString;
+	}
+
+	public void setSelectedLocaleString(String selectedLocaleString) {
+		this.selectedLocaleString = selectedLocaleString;
+	}
+
+	public String getLocale() {
+		return locale;
+	}
+
+	public void setLocale(String locale) {
+		this.locale = locale;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getSelectedLocale() {
+		return selectedLocale;
+	}
+
+	public void setSelectedLocale(String selectedLocale) {
+		this.selectedLocale = selectedLocale;
 	}
 }

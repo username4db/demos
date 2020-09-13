@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
 
@@ -57,6 +58,12 @@ public class DemoServlet1 extends BaseServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		request.getRequestDispatcher("demo.jsp").include(request, response);
+		request.getRequestDispatcher("demo2").forward(request, response);
+		HttpSession session = request.getSession();
+		session.invalidate();
+
+		this.getServletContext().getRequestDispatcher("/demo2");
 		doGet(request, response);
 	}
 }
